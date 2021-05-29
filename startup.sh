@@ -1,0 +1,1 @@
+docker run -p 8080:8080 -d footballservice.2021:latest
