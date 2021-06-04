@@ -2,12 +2,15 @@ package com.sapientdemo.FootballService.service.impl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
 import org.apache.http.client.utils.URIBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.sapientdemo.FootballService.controller.FootballServiceController;
 import com.sapientdemo.FootballService.dao.Country;
 import com.sapientdemo.FootballService.dao.Leagues;
 import com.sapientdemo.FootballService.dao.TeamStanding;
@@ -37,6 +41,8 @@ public class FootballServiceImpl implements FootballService{
 	@Autowired
 	RestTemplate template;
 	
+	private static final Logger logger = LoggerFactory.getLogger(FootballServiceImpl.class);
+	
 	private static final String COUNTRIES_ACTION = "get_countries";
 	private static final String LEAGUES_ACTION = "get_leagues";
 	private static final String STANDINGS_ACTION = "get_standings";
@@ -45,6 +51,7 @@ public class FootballServiceImpl implements FootballService{
 	
 	public TeamStanding getFootballTeam(String contryName, String leagueName, String teamName) {
 		
+		logger.info(MessageFormat.format("calling getFootballTeam service;contryName: {0},leagueName: {1},teamName: {2}",contryName,leagueName,teamName));
 		String countryId = service.getContrieDetails(contryName);
 		if(countryId != null) {
 			String leagueId = service.getLeague(leagueName, countryId);
@@ -58,9 +65,6 @@ public class FootballServiceImpl implements FootballService{
 		}
 		
 		return null;
-		
-		//https://apiv2.apifootball.com/?action=get_standings&league_id=148&APIkey=xxxxxxxxxxxxxx
-		//https://apiv2.apifootball.com/?action=get_leagues&country_id=41&APIkey=xxxxxxxxxxxxxx
 	}
 	
 	public TeamStanding getTeamStanding(String countryId, String leagueId, String teamName) {
@@ -73,6 +77,7 @@ public class FootballServiceImpl implements FootballService{
 				      .addParameter("APIkey", footballApiKey)
 				      .build();
 			
+			logger.info(MessageFormat.format("calling getTeamStanding service; url: {0}", uri.toString()));
 			ResponseEntity<List<TeamStanding>> responseEntity = template.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<TeamStanding>>() {});
 			if(responseEntity.getStatusCode().is2xxSuccessful()) {
 				List<TeamStanding> teamStandings = responseEntity.getBody();
@@ -81,8 +86,7 @@ public class FootballServiceImpl implements FootballService{
 			}
 			
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -96,6 +100,7 @@ public class FootballServiceImpl implements FootballService{
 				      .addParameter("APIkey", footballApiKey)
 				      .build();
 			
+			logger.info(MessageFormat.format("calling getContrieDetails service; url: {0}", uri.toString()));
 			ResponseEntity<List<Country>> responseEntity = template.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Country>>() {});
 			if(responseEntity.getStatusCode().is2xxSuccessful()) {
 				List<Country> contries = responseEntity.getBody();
@@ -104,8 +109,7 @@ public class FootballServiceImpl implements FootballService{
 			}
 			
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -120,6 +124,7 @@ public class FootballServiceImpl implements FootballService{
 				      .addParameter("APIkey", footballApiKey)
 				      .build();
 			
+			logger.info(MessageFormat.format("calling getLeague service; url: {0}", uri.toString()));
 			ResponseEntity<List<Leagues>> responseEntity = template.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<Leagues>>() {});
 			if(responseEntity.getStatusCode().is2xxSuccessful()) {
 				List<Leagues> leagues = responseEntity.getBody();
@@ -128,8 +133,7 @@ public class FootballServiceImpl implements FootballService{
 			}
 			
 		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}

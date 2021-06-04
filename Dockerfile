@@ -6,4 +6,5 @@ RUN mvn -f /usr/src/app/pom.xml clean package
 FROM gcr.io/distroless/java  
 COPY --from=build /usr/src/app/target/FootballService-0.0.1-SNAPSHOT.jar /usr/app/FootballService-0.0.1-SNAPSHOT.jar  
 EXPOSE 8080
+ENV JASYPT_ENCRYPTOR_PASSWORD=
 ENTRYPOINT ["java","-jar","/usr/app/FootballService-0.0.1-SNAPSHOT.jar"] 
