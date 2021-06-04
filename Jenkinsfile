@@ -1,8 +1,10 @@
 pipeline {
 	agent any
-	
-	tools {
-		maven "3.5.4"
+
+	environment {
+		dockerImage = ''
+		registry = 'sklucifer/footballservice'
+		registryCredential = '94ea2bff-36c9-430e-bb45-2335cac1e502'
 	}
 
 	stages {
@@ -10,6 +12,24 @@ pipeline {
 			steps {
 				sh "mvn -version"
 				sh "mvn clean install"
+			}
+		}
+
+		stage("Build Docker Image") {
+			steps {
+				script {
+					dockerImage = docker.build registry
+				}
+			}
+		}	
+
+		stage("Uploading Docker Image") {
+			steps {
+				script {
+					 docker.withRegistry( '', registryCredential ) {
+						dockerImage.push()
+					 }
+				}
 			}
 		}
 	}
