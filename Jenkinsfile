@@ -4,7 +4,7 @@ pipeline {
 	environment {
 		dockerImage = ''
 		registry = 'sklucifer/footballservice'
-		registryCredential = '94ea2bff-36c9-430e-bb45-2335cac1e502'
+		registryCredential = ''
 	}
 
 	tools {
