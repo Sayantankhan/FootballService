@@ -48,7 +48,6 @@ public class FootballServiceImpl implements FootballService{
 	private static final String STANDINGS_ACTION = "get_standings";
 	
 	@Override
-	
 	public TeamStanding getFootballTeam(String contryName, String leagueName, String teamName) {
 		
 		logger.info(MessageFormat.format("calling getFootballTeam service;contryName: {0},leagueName: {1},teamName: {2}",contryName,leagueName,teamName));
