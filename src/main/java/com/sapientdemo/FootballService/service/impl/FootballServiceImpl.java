@@ -58,7 +58,7 @@ public class FootballServiceImpl implements FootballService{
 			if(leagueId != null) {
 				TeamStanding ts = getTeamStanding(countryId, leagueId, teamName);
 				if(ts != null) {
-					ts.setCountry_name(contryName);
+					ts.setCountry_id(countryId);
 					return ts;
 				}
 			}
