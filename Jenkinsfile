@@ -7,6 +7,10 @@ pipeline {
 		registryCredential = '94ea2bff-36c9-430e-bb45-2335cac1e502'
 	}
 
+	tools {
+		maven "3.5.4"
+	}
+
 	stages {
 		stage("Build") {
 			steps {
